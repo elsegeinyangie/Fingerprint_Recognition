@@ -1,10 +1,8 @@
-from tensorflow.python.keras import layers, models
+from keras import layers, models
 
+# Builds a modified LeNet-5 model for multi-output classification
 def lenet(input_shape):
-    """
-    Builds a modified LeNet-5 model for multi-output classification:
-    gender, left/right hand, and finger type.
-    """
+
     model = models.Sequential()
 
     # First convolutional layer

@@ -1,9 +1,8 @@
-from tensorflow.python.keras import layers, models
+from keras import layers, models
 
+# Builds a simplified VGG-like model for multi-output classification.
 def vgg(input_shape):
-    """
-    Builds a simplified VGG-like model for multi-output classification.
-    """
+
     model = models.Sequential()
 
     # Block 1

@@ -1,11 +1,9 @@
 from keras import layers, models
 from keras.applications import ResNet50
 
-
+# Builds a ResNet50 model for multi-output classification.
 def resnet(input_shape):
-    """
-    Builds a ResNet50 model for multi-output classification.
-    """
+
     base_model = ResNet50(include_top=False, weights=None, input_shape=input_shape, pooling='avg')
 
     x = base_model.output

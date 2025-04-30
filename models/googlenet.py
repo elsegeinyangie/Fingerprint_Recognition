@@ -1,10 +1,9 @@
 from keras import layers, models
 from keras.applications import InceptionV3
 
+# Builds an InceptionV3 (GoogleNet) model for multi-output classification.
 def googlenet(input_shape):
-    """
-    Builds an InceptionV3 (GoogleNet) model for multi-output classification.
-    """
+
     base_model = InceptionV3(include_top=False, weights=None, input_shape=input_shape, pooling='avg')
 
     x = base_model.output

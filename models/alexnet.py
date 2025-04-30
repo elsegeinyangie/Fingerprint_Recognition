@@ -1,9 +1,8 @@
-from tensorflow.python.keras import layers, models
+from keras import layers, models
 
+# Builds a modified AlexNet model for multi-output classification.
 def alexnet(input_shape):
-    """
-    Builds a modified AlexNet model for multi-output classification.
-    """
+
     model = models.Sequential()
 
     # 1st Convolutional Layer
