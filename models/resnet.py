@@ -2,8 +2,9 @@ from keras import layers, models
 from keras.applications import ResNet50
 
 # Builds a ResNet50 model for multi-output classification.
-def resnet(input_shape):
+def resnet(input_shape=(224, 224, 3)):
 
+    print(f"Building ResNet50 model with input shape: {input_shape}")
     base_model = ResNet50(include_top=False, weights=None, input_shape=input_shape, pooling='avg')
 
     x = base_model.output
@@ -19,7 +20,11 @@ def resnet(input_shape):
                         loss={'gender_output': 'sparse_categorical_crossentropy',
                             'hand_output': 'sparse_categorical_crossentropy',
                             'finger_output': 'sparse_categorical_crossentropy'},
-                        metrics=['accuracy'])
+                        metrics={
+                                    "gender_output": "accuracy",
+                                    "hand_output": "accuracy",
+                                    "finger_output": "accuracy"
+                                })
 
     return final_model
 

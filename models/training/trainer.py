@@ -8,6 +8,7 @@ def train_model(model, X_train, y_train, X_test, y_test, model_name,
                 batch_size=32, epochs=20, model_save_dir="saved_models"):
     """Train the specified model"""
     # Create model save directory if it doesn't exist
+    print(f'Training model {model_name}')
     os.makedirs(model_save_dir, exist_ok=True)
     
     # Define callbacks
@@ -23,12 +24,21 @@ def train_model(model, X_train, y_train, X_test, y_test, model_name,
 
     # Train model
     history = model.fit(
-        X_train,
-        {"gender_output": y_train},  # Only using gender for now
-        batch_size=batch_size,
-        epochs=epochs,
-        validation_data=(X_test, {"gender_output": y_test}),
-        callbacks=callbacks,
-        verbose=1
-    )
+    X_train,
+    {
+        "gender_output": y_train,
+        "hand_output": y_train,
+        "finger_output": y_train
+    },
+    validation_data=(X_test, {
+        "gender_output": y_test,
+        "hand_output": y_test,
+        "finger_output": y_test
+    }),
+    batch_size=batch_size,
+    epochs=epochs,
+    callbacks=callbacks,
+    verbose=1
+)
+
     return model, history

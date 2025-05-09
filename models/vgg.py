@@ -1,44 +1,24 @@
-from keras import layers, models
+import tensorflow as tf
+from tensorflow.keras.applications import VGG16
+from tensorflow.keras import layers, Model, Input
 
-# Builds a simplified VGG-like model for multi-output classification.
-def vgg(input_shape):
+def vgg(input_shape=(224, 224, 3)):
+    
+    print(f"Building VGG16 model with input shape: {input_shape}")
+    
+    base_model = VGG16(include_top=False, weights='imagenet', input_shape=input_shape)
+    base_model.trainable = False  # Optional: freeze VGG16 layers
 
-    model = models.Sequential()
+    inputs = Input(shape=input_shape)
+    x = base_model(inputs, training=False)
+    x = layers.Flatten()(x)
+    x = layers.Dense(512, activation='relu')(x)
+    x = layers.Dropout(0.5)(x)
 
-    # Block 1
-    model.add(layers.Conv2D(64, (3, 3), activation='relu', padding='same', input_shape=input_shape))
-    model.add(layers.Conv2D(64, (3, 3), activation='relu', padding='same'))
-    model.add(layers.MaxPooling2D((2, 2)))
+    # Output heads
+    gender_output = layers.Dense(2, activation='softmax', name='gender_output')(x)
+    hand_output = layers.Dense(2, activation='softmax', name='hand_output')(x)
+    finger_output = layers.Dense(5, activation='softmax', name='finger_output')(x)
 
-    # Block 2
-    model.add(layers.Conv2D(128, (3, 3), activation='relu', padding='same'))
-    model.add(layers.Conv2D(128, (3, 3), activation='relu', padding='same'))
-    model.add(layers.MaxPooling2D((2, 2)))
-
-    # Block 3
-    model.add(layers.Conv2D(256, (3, 3), activation='relu', padding='same'))
-    model.add(layers.Conv2D(256, (3, 3), activation='relu', padding='same'))
-    model.add(layers.MaxPooling2D((2, 2)))
-
-    model.add(layers.Flatten())
-
-    # Fully connected layers
-    model.add(layers.Dense(4096, activation='relu'))
-    model.add(layers.Dropout(0.5))
-    model.add(layers.Dense(4096, activation='relu'))
-    model.add(layers.Dropout(0.5))
-
-    # Multi-output heads
-    gender_output = layers.Dense(2, activation='softmax', name='gender_output')(model.output)
-    hand_output = layers.Dense(2, activation='softmax', name='hand_output')(model.output)
-    finger_output = layers.Dense(5, activation='softmax', name='finger_output')(model.output)
-
-    final_model = models.Model(inputs=model.input, outputs=[gender_output, hand_output, finger_output])
-
-    final_model.compile(optimizer='adam',
-                        loss={'gender_output': 'sparse_categorical_crossentropy',
-                            'hand_output': 'sparse_categorical_crossentropy',
-                            'finger_output': 'sparse_categorical_crossentropy'},
-                        metrics=['accuracy'])
-
-    return final_model
+    model = Model(inputs=inputs, outputs=[gender_output, hand_output, finger_output])
+    return model
