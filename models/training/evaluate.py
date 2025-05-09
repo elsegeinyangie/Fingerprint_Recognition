@@ -3,9 +3,7 @@ import matplotlib.pyplot as plt
 
 
 def evaluate_model(model, X_test, y_test):
-    """Evaluate model performance"""
-    # Evaluate for all three outputs: gender, hand, and finger
-    print(f"Evaluating model{model}...")
+    """Evaluate the model on gender, hand, and finger predictions"""
     results = model.evaluate(X_test, {
         "gender_output": y_test[0], 
         "hand_output": y_test[1],
@@ -21,13 +19,8 @@ def evaluate_model(model, X_test, y_test):
     
     return results
 
-
-
-
-
 def plot_history(history):
-    """Plot training history for all three outputs"""
-    print("Plotting training history...")
+    """Plot training history for accuracy and loss of all outputs"""
     plt.figure(figsize=(15, 5))
 
     # Plot accuracy for all three outputs
